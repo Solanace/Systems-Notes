@@ -1,3 +1,33 @@
+## 11/08/17: Sending mixed signals
+
+* `getpid()` and `sleep(<TIME>)` are pretty self-explanatory C commands
+
+**Signals**
+
+* Limited way of sending information to a process
+* `kill`
+	* Command line utility to send a signal to a process
+	* `$ kill <PID>` sends signal 15 (SIGTERM) to the specified PID
+	* `$ kill -<SIGNAL> <PID>` sends a specific signal to the specified PID
+* `killall [-<SIGNAL>] <PROCESS>`
+	* Sends SIGTERM or SIGNAL to all processes with the specified name
+* CTRL + C sends SIGINT and interrupts the process
+
+**Signal Handling in C**
+
+* `kill(<PID>, <SIGNAL>)` - `<signal.h>`
+	* Returns 0 on success or -1 (errno) on failure
+* sighandler
+	* In order to intercept signals in C, you have to create a signal handling function
+	* Some signals cannot be caught, e.g., SIGKILL
+	* `static void sighandler(int signo)`
+		* Static means the function can only be called within the file it is defined (not headers)
+	* Usually, just write a single sighandler for all signals you expect to intercept
+* `signal(<SIGNAL>, sighandler)` - `<signal.h>`
+	* After you create the function, you attach the signals to it using the original function
+
+---
+
 ## 11/06/17: Are your processes running? Then you should go out and catch them!
 
 **More Command Line Arguments**
@@ -18,10 +48,10 @@
 * Programs can create subprocesses, but these are the same as regular processes
 * A processor can handle 1 process per cycle or per core
 * "Multitasking" only appears to happen due to the processor switching between all the active processes quickly
-* pid
+* PID
 	* Unique identifiers for processes
-	* pid 1 is the init process, always running
-	* Each entry in the /proc directory is a current pid
+	* PID 1 is the init process, always running
+	* Each entry in the `/proc` directory is a current PID
 	* The `ps` command in Terminal lists what processes are currently running
 	* `ps -a` lists all processes across all accounts
 	* `ps -ax` lists processes not attached to Terminals
