@@ -1,3 +1,26 @@
+## 11/09/17: Time to make an executive decision
+
+**The exec family - `<unistd.h>`**
+* C functions that run other programs from within
+* Replaces current process with the new program, so PID does not change
+* `execlp(<PROGRAM NAME>, <ARG1>, <ARG2>, ..., NULL)`
+	* PROGRAM NAME and ARG1 are identical
+	* Example: `execlp("ls", "ls", "-a", NULL)`
+	* All code after an exec statement isn't run
+* `execvp(<PROGRAM NAME>, <ARRAY OF STRING ARGS>)`
+	* Last argument in the array must be NULL
+	* Example:
+	```C
+	args[0] = "ls";
+	args[1] = "-a";
+	args[2] = "-l";
+	args[3] = NULL;
+	
+	execvp(args[0], args);
+	```
+
+---
+
 ## 11/08/17: Sending mixed signals
 
 * `getpid()` and `sleep(<TIME>)` are pretty self-explanatory C commands
