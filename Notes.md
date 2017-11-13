@@ -1,6 +1,26 @@
+## 11/13/17: What the fork?
+
+**Managing Sub-processes**
+* `fork()` - `<unistd.h>`
+	* Creates a separate process based on the original one
+	* The new process is called a child, while the original one is called a parent
+	* The child is a duplicate of the parent process; all parts of the parent process are copied, including stack, heap, and the file table
+	* Only the PID differentiates the two
+	* Example:
+	```C
+	printf("Pre-fork\nPID: %d\n", getpid());
+	fork();
+	printf("Post-fork\nPID: %d\n", getpid());
+	// Second print statement will be printed TWICE, once by the parent and once by the child
+	```
+	* DO NOT USE `while (1) fork();`
+	* Returns 0 to the child and the child's PID to the parent (or -1 for errno)
+
+---
+
 ## 11/09/17: Time to make an executive decision
 
-**The exec family - `<unistd.h>`**
+**The `exec` Family - `<unistd.h>`**
 * C functions that run other programs from within
 * Replaces current process with the new program, so PID does not change
 * `execlp(<PROGRAM NAME>, <ARG1>, <ARG2>, ..., NULL)`
