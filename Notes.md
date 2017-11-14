@@ -1,3 +1,18 @@
+## 11/14/17: Wait for it
+
+* Order in which forked processes are run is unpredictable
+* `getppid()` returns the parent PID, which all processes have
+	* Parent PID of the original process is the Terminal window or wherever you ran the file from
+	* Sometimes returns 1 (the init process) because the parent process has ended when `getppid()` was called
+	* These are called orphan processes
+* A thread can run on its own, but shares memory space with whatever process created it (only works while process is running)
+* `wait(int *status)` - `<unistd.h>`
+	* Stops a parent process from running until any child gives it a signal (usually the child exiting)
+	* Returns the PID of the child that exited, or -1 (errno)
+	`status` stores information about how the process exited
+
+---
+
 ## 11/13/17: What the fork?
 
 **Managing Sub-processes**
