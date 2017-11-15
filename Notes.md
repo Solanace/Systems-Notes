@@ -1,3 +1,26 @@
+## 11/15/17: Playing Favorites
+
+```C
+int x = 302;
+char *p = &x;
+
+Little-endian representation of x
+| 46 |   1 |  0 |  0 | -> | 00101110 | 00000001 | ... |
+
+Big-endian representation of x
+|  0 |   0 |  1 | 46 | -> | ... | 00000001 | 00101110 |
+```
+* Depending on your operating system, the order of the bytes may be reversed
+* The _bits_ in each byte, however, are never reversed
+* The most significant (biggest) digit is stored first in big-endian, and vice versa for little-endian
+* `WEXITSTATUS(int status)`
+	* Not a function, but a macro (hence the caps) that looks at the bytes of `status`
+* `waitpid(pid, status options)` - `<unistd.h>`
+	* Waits for a specific child specified by `pid`, or any child if -1
+	* `options` can set other behavior for wait, does nothing if 0
+
+---
+
 ## 11/14/17: Wait for it
 
 * Order in which forked processes are run is unpredictable
