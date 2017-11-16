@@ -15,7 +15,7 @@ Big-endian representation of x
 * The most significant (biggest) digit is stored first in big-endian, and vice versa for little-endian
 * `WEXITSTATUS(int status)`
 	* Not a function, but a macro (hence the caps) that looks at the bytes of `status`
-* `waitpid(pid, status options)` - `<unistd.h>`
+* `waitpid(pid, status, options)` - `<unistd.h>`
 	* Waits for a specific child specified by `pid`, or any child if -1
 	* `options` can set other behavior for wait, does nothing if 0
 
