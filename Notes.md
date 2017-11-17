@@ -1,3 +1,42 @@
+## 11/17/17: Ceci n'est pas une pipe
+
+**Pipe**
+* Conduit between 2 separate processes on the same computer
+* Consists of a read end and a write end, unidirectional
+* Acts like a file (opening, closing, added to the file table)
+* You can transfer any data you want through a pipe using read/write
+* Unnamed pipes don't have external identifiers, whereas named pipes do
+* `pipe(int pipefd[2])` - `<unistd.h>`
+	* Creates an unnamed pipe, returning 0 if successful and -1 otherwise
+	* `pipefd` contains the descriptors for the read and write ends respectively
+	* Example:
+```C
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+	
+int main() {
+	int READ = 0, WRITE = 1, f;
+	int fds[2];
+	pipe(fds);
+	f = fork();
+	if (!f) {
+		close(fds[READ]);
+		char s[10] = "hello!";
+		write(fds[WRITE], s, sizeof(s));
+	}
+	else {
+		close(fds[WRITE]);
+		char s[10];
+		read(fds[READ], s, sizeof(s));
+		printf("Parent received: \"%s\"\n", s);
+	}
+	return 0;
+```
+
+---
+
 ## 11/15/17: Playing Favorites
 
 ```C
@@ -14,7 +53,7 @@ Big-endian representation of x
 * The _bits_ in each byte, however, are never reversed
 * The most significant (biggest) digit is stored first in big-endian, and vice versa for little-endian
 * `WEXITSTATUS(int status)`
-	* Not a function, but a macro (hence the caps) that looks at the bytes of `status`
+	* Not a function, but a macro (hence the caps) that looks at the bytes of `status` and finds what the child returned (use `WIFEXITED(int status)` to check if the child returned something in the first place)
 * `waitpid(pid, status, options)` - `<unistd.h>`
 	* Waits for a specific child specified by `pid`, or any child if -1
 	* `options` can set other behavior for wait, does nothing if 0
@@ -32,7 +71,7 @@ Big-endian representation of x
 * `wait(int *status)` - `<unistd.h>`
 	* Stops a parent process from running until any child gives it a signal (usually the child exiting)
 	* Returns the PID of the child that exited, or -1 (errno)
-	`status` stores information about how the process exited
+	* `status` stores information about how the process exited, both the `exit()` or return value and signal number if it exited abnormally
 
 ---
 
@@ -45,12 +84,12 @@ Big-endian representation of x
 	* The child is a duplicate of the parent process; all parts of the parent process are copied, including stack, heap, and the file table
 	* Only the PID differentiates the two
 	* Example:
-	```C
-	printf("Pre-fork\nPID: %d\n", getpid());
-	fork();
-	printf("Post-fork\nPID: %d\n", getpid());
-	// Second print statement will be printed TWICE, once by the parent and once by the child
-	```
+```C
+printf("Pre-fork\nPID: %d\n", getpid());
+fork();
+printf("Post-fork\nPID: %d\n", getpid());
+// Second print statement will be printed TWICE, once by the parent and once by the child
+```
 	* DO NOT USE `while (1) fork();`
 	* Returns 0 to the child and the child's PID to the parent (or -1 for errno)
 
@@ -68,14 +107,14 @@ Big-endian representation of x
 * `execvp(<PROGRAM NAME>, <ARRAY OF STRING ARGS>)`
 	* Last argument in the array must be NULL
 	* Example:
-	```C
-	args[0] = "ls";
-	args[1] = "-a";
-	args[2] = "-l";
-	args[3] = NULL;
-	
-	execvp(args[0], args);
-	```
+```C
+args[0] = "ls";
+args[1] = "-a";
+args[2] = "-l";
+args[3] = NULL;
+
+execvp(args[0], args);
+```
 
 ---
 
@@ -160,9 +199,9 @@ _ _ _ _  _ _ _  _ _ _  _ _ _
 * `scanf(<FORMAT STRING>, <VAR 1>, <VAR 2>, ...)` - `<stdio.h>`
 	* Reads in data from stdin using the format string to determine types and puts the data in each variable
 	* Example:
-	```C
-	int x; float f; double d;
-	scanf("%d %f %lf", &x, &f, *d);
-	```
+```C
+int x; float f; double d;
+scanf("%d %f %lf", &x, &f, *d);
+```
 
 ---
