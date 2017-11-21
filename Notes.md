@@ -1,3 +1,22 @@
+## 11/21/17: A pipe by any other name...
+
+* Named pipes are also known as FIFOs; their names let them be identified across different programs
+* `$ mkfifo <PIPE NAME>`
+	* Shell command to create a named pipe, listed as `prw-r--r--` via `ls -l`
+	* Use `cat <PIPE NAME>` to read from and `cat > <PIPE NAME>` to write to the pipe
+	* Multiple terminals can write to the same pipe without any problem
+	* If multiple terminals are reading from the same pipe, only one will receive a message
+		* There is no order to which terminal will receive it
+	* Even after removing a pipe, connections between terminals still exist; it's just an unnamed pipe now
+* `mkfifo(<NAME>, <PERMISSIONS>)` - `<sys/types.h> <sys/stat.h>`
+	* Makes a FIFO in C, returning 0 on success and -1 on failure
+	* The FIFO acts like a regular file, which can be opened, read, written, and closed
+	* FIFOs will block on open (unnamed pipes block on read) until both ends of the pipe have a connection
+* Use semicolons in bash to run multiple commands on one line
+* `cd` cannot be execed
+
+---
+
 ## 11/17/17: Ceci n'est pas une pipe
 
 **Pipe**
