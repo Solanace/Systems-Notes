@@ -1,3 +1,27 @@
+## 11/27/17: Redirection; how does it ... SQUIRREL
+
+* Changing the usual input/output behavior of a program
+* `ps > ps_file` creates a new file and puts the output of `ps` into that file, rather than the terminal
+* In general, `<COMMAND> > <FILE NAME>` redirects stdout to a file and overwrites its contents
+	* \>> also redirects stdout to a file, but appends it to the end
+* 2> redirects stderr to a file and overwrites it (2>> appends)
+* &> redirects stdout and stderr (&>> appends)
+* < redirects stdin from a file
+* | (pipe) redirects stdout from one command to stdin of the next
+	* `ls | wc` takes the output of ls and feeds it into wc
+
+**Redirection in C programs**
+* `dup(fd)` - `<unistd.h>`
+	* Duplicates an existing entry in the file table (opens it again)
+	* Returns a new file descriptor for the duplicate entry
+* `dup2(fd1, fd2)` - `<unistd.h>`
+	* Redirects fd2 to fd1
+	* Duplicates the behavior for fd1 at fd2
+	* fd2 loses its original reference; the file gets closed
+	* Use it in conjunction with `dup`
+
+---
+
 ## 11/21/17: A pipe by any other name...
 
 * Named pipes are also known as FIFOs; their names let them be identified across different programs
