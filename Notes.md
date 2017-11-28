@@ -1,3 +1,22 @@
+## 11/28/17: C, the ultimate hipster, using # decades before it was cool
+
+* \# provides preprocessor instructions, handled by gcc first
+* `#include <LIBRARY> | "LIBRARY"` links libraries to your code
+* `#define <NAME> <VALUE>` replaces all occurances of NAME with VALUE
+	* Example: `define TRUE 1`
+* Macros are like typeless functions: `#define SQUARE(x) x * x`
+	* `int y = square(9) -> int y = 9 * 9)`
+	* `#define MIX(x, y) x < y ? x : y`
+* Conditional statement
+	```C
+	#ifndef <IDENTIFIER>
+	<CODE>
+	#endif
+	```
+	* If the identifier has been defined ignore all code until the last endif
+
+---
+
 ## 11/27/17: Redirection; how does it ... SQUIRREL
 
 * Changing the usual input/output behavior of a program
@@ -53,45 +72,45 @@
 	* Creates an unnamed pipe, returning 0 if successful and -1 otherwise
 	* `pipefd` contains the descriptors for the read and write ends respectively
 	* Example:
-```C
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-	
-int main() {
-	int READ = 0, WRITE = 1, f;
-	int fds[2];
-	pipe(fds);
-	f = fork();
-	if (!f) {
-		close(fds[READ]);
-		char s[10] = "hello!";
-		write(fds[WRITE], s, sizeof(s));
-	}
-	else {
-		close(fds[WRITE]);
-		char s[10];
-		read(fds[READ], s, sizeof(s));
-		printf("Parent received: \"%s\"\n", s);
-	}
-	return 0;
-```
+	```C
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <unistd.h>
+	#include <fcntl.h>
+		
+	int main() {
+		int READ = 0, WRITE = 1, f;
+		int fds[2];
+		pipe(fds);
+		f = fork();
+		if (!f) {
+			close(fds[READ]);
+			char s[10] = "hello!";
+			write(fds[WRITE], s, sizeof(s));
+		}
+		else {
+			close(fds[WRITE]);
+			char s[10];
+			read(fds[READ], s, sizeof(s));
+			printf("Parent received: \"%s\"\n", s);
+		}
+		return 0;
+	```
 
 ---
 
 ## 11/15/17: Playing Favorites
 
-```C
-int x = 302;
-char *p = &x;
+	```C
+	int x = 302;
+	char *p = &x;
 
-Little-endian representation of x
-| 46 |   1 |  0 |  0 | -> | 00101110 | 00000001 | ... |
+	Little-endian representation of x
+	| 46 |   1 |  0 |  0 | -> | 00101110 | 00000001 | ... |
 
-Big-endian representation of x
-|  0 |   0 |  1 | 46 | -> | ... | 00000001 | 00101110 |
-```
+	Big-endian representation of x
+	|  0 |   0 |  1 | 46 | -> | ... | 00000001 | 00101110 |
+	```
 * Depending on your operating system, the order of the bytes may be reversed
 * The _bits_ in each byte, however, are never reversed
 * The most significant (biggest) digit is stored first in big-endian, and vice versa for little-endian
@@ -127,12 +146,12 @@ Big-endian representation of x
 	* The child is a duplicate of the parent process; all parts of the parent process are copied, including stack, heap, and the file table
 	* Only the PID differentiates the two
 	* Example:
-```C
-printf("Pre-fork\nPID: %d\n", getpid());
-fork();
-printf("Post-fork\nPID: %d\n", getpid());
-// Second print statement will be printed TWICE, once by the parent and once by the child
-```
+	```C
+	printf("Pre-fork\nPID: %d\n", getpid());
+	fork();
+	printf("Post-fork\nPID: %d\n", getpid());
+	// Second print statement will be printed TWICE, once by the parent and once by the child
+	```
 	* DO NOT USE `while (1) fork();`
 	* Returns 0 to the child and the child's PID to the parent (or -1 for errno)
 
@@ -150,14 +169,14 @@ printf("Post-fork\nPID: %d\n", getpid());
 * `execvp(<PROGRAM NAME>, <ARRAY OF STRING ARGS>)`
 	* Last argument in the array must be NULL
 	* Example:
-```C
-args[0] = "ls";
-args[1] = "-a";
-args[2] = "-l";
-args[3] = NULL;
+	```C
+	args[0] = "ls";
+	args[1] = "-a";
+	args[2] = "-l";
+	args[3] = NULL;
 
-execvp(args[0], args);
-```
+	execvp(args[0], args);
+	```
 
 ---
 
@@ -242,9 +261,9 @@ _ _ _ _  _ _ _  _ _ _  _ _ _
 * `scanf(<FORMAT STRING>, <VAR 1>, <VAR 2>, ...)` - `<stdio.h>`
 	* Reads in data from stdin using the format string to determine types and puts the data in each variable
 	* Example:
-```C
-int x; float f; double d;
-scanf("%d %f %lf", &x, &f, *d);
-```
+	```C
+	int x; float f; double d;
+	scanf("%d %f %lf", &x, &f, *d);
+	```
 
 ---
