@@ -1,3 +1,29 @@
+## 12/01/17: Sharing is caring!
+
+**Shared Memory**
+* `<sys/shm.h>`, `<sys/ipc.h>`, `<sys/types.h>`
+* A segment of memory that can be accessed by multiple processes
+* Instead of the parent and child each storing a copy of a variable, they instead store pointers to the same thing
+* Processes need to be given keys to access the shared memory
+* _Not_ released when a program exits
+* 5 shared memory operations: create the segment (happens once); access the segment (once per process); attach the segment to a variable (once per process); detach the segment from a variable (once per process); remove the segment (happens once)
+* `shmget(key, size, flags)`
+	* Creates/Accesses a shared memory segment
+	* Returns a shared memory descriptor (à la file descriptor) or -1 if it fails (errno)
+	* `key` - Unique integer identifier for the shared memory segment (à la file name)
+	* `size` - How many bytes to request
+	* `flags` - Are we creating a segment? Accessing? 3-digit octals, combined with bitwise or
+		* `IPC_CREAT` - Creates the segment. If segment is new, sets value to all 0s
+		* `IPC_EXCL` - Fail if the segment already exists and `IPC_CREAT` is on
+* `shmat(descriptor, address, flags)`
+	* Attaches a shared memory segment to a variable
+	* Returns a pointer to the segment, or -1 (errno)
+	* `descriptor` - Return value of `shmget`
+	* `address` - If 0, the OS will provide the appropriate address
+	* `flags` - Usually 0, but `SHM_RDONLY` is useful and makes the memory read-only
+
+---
+
 ## 11/28/17: C, the ultimate hipster, using # decades before it was cool
 
 * \# provides preprocessor instructions, handled by gcc first
@@ -5,8 +31,8 @@
 * `#define <NAME> <VALUE>` replaces all occurances of NAME with VALUE
 	* Example: `define TRUE 1`
 * Macros are like typeless functions: `#define SQUARE(x) x * x`
-	* `int y = square(9) -> int y = 9 * 9)`
-	* `#define MIX(x, y) x < y ? x : y`
+	* `int y = square(9) -> int y = 9 * 9`
+	* `#define MIN(x, y) x < y ? x : y`
 * Conditional statement
 	```C
 	#ifndef <IDENTIFIER>
@@ -29,7 +55,7 @@
 * | (pipe) redirects stdout from one command to stdin of the next
 	* `ls | wc` takes the output of ls and feeds it into wc
 
-**Redirection in C programs**
+**Redirection in C Programs**
 * `dup(fd)` - `<unistd.h>`
 	* Duplicates an existing entry in the file table (opens it again)
 	* Returns a new file descriptor for the duplicate entry
@@ -244,7 +270,6 @@
 
 * In [Work 08](https://github.com/iwang2/08_stat/blob/master/stat.c), we used `st_mode` in `struct stat`, which returned a 6-digit octal as opposed to the 3-digit one we were expecting
 * To remove the first three digits, use the bitwise & operator:
-
 ```
 Mode
 _ _ _ _  _ _ _  _ _ _  _ _ _
