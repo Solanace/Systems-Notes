@@ -1,3 +1,27 @@
+## 12/04/17: Memes
+
+DN: Why is the aim Memes?
+Memes are sort of like shared memory, just between people and not processes
+
+**Shared Memory Continued**
+* `shmdt(pointer)`
+	* Detach a variable from a shared memory segment
+	* Returns 0 upon success and -1 upon failure
+	* `pointer` - Address used to access the segment (return value of `shmat`)
+* `shmctl(descriptor, commands, buffer)`
+	* Performs various operations on the shared memory segment
+	* A segment has metadata that can be stored in `struct shmid_ds`
+		* Stored metadata includes last access date, size, PID of creator, PID of last modification
+	* `descriptor` - Return value of `shmget`
+	* `commands`
+		* `IPC_RMID` - Remove a shared memory segment
+		* `IPC_STAT` - Populate the `buffer` (`struct shmid_dis *`) with segment metadata
+		* `IPC_SET` - Set some of the segment metadata from `buffer`
+* `ipcs -m`
+	* Terminal command that lists all of the current shared memory segments with metadata
+
+---
+
 ## 12/01/17: Sharing is caring!
 
 **Shared Memory**
@@ -6,13 +30,18 @@
 * Instead of the parent and child each storing a copy of a variable, they instead store pointers to the same thing
 * Processes need to be given keys to access the shared memory
 * _Not_ released when a program exits
-* 5 shared memory operations: create the segment (happens once); access the segment (once per process); attach the segment to a variable (once per process); detach the segment from a variable (once per process); remove the segment (happens once)
+* 5 shared memory operations
+	* Create the segment (happens once)
+	* Access the segment (once per process)
+	* Attach the segment to a variable (once per process)
+	* Detach the segment from a variable (once per process)
+	* Remove the segment (happens once)
 * `shmget(key, size, flags)`
 	* Creates/Accesses a shared memory segment
 	* Returns a shared memory descriptor (à la file descriptor) or -1 if it fails (errno)
 	* `key` - Unique integer identifier for the shared memory segment (à la file name)
-	* `size` - How many bytes to request
-	* `flags` - Are we creating a segment? Accessing? 3-digit octals, combined with bitwise or
+	* `size` - Number of bytes requested
+	* `flags` - Are we creating a segment? Accessing? 3-digit octals, combined with | (bitwise or)
 		* `IPC_CREAT` - Creates the segment. If segment is new, sets value to all 0s
 		* `IPC_EXCL` - Fail if the segment already exists and `IPC_CREAT` is on
 * `shmat(descriptor, address, flags)`
