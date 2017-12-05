@@ -1,9 +1,49 @@
+## 12/05/17: How do we flag down a resource?
+
+DN: How would you control access to a shared resource like a file, pipe, or shared memory, such that you could ensure no read/write conflicts occurred?
+
+#### Semaphores
+* Created by Edsger Dijkstra
+* IPC construct used to control access to shared resources
+* More commonly used as a counter representing how many processes can access a resource simultaneously
+	* A semaphore with a value of 3 can have 3 more active "users" (every new process accessing it decreases its value by 1)
+	* A semaphore with a value of 0 is unavailable
+* Semaphores are _atomic_, not split up into multiple processor instructions
+
+#### Semaphore Operations
+* Non-atomic
+	* Create a semaphore
+	* Set an initial value
+	* Remove a semaphore
+* Atomic
+	* `Up(S) / V(S)`
+		* Release the semaphore to signal you are done with its associated resource
+		* Pseudocode: `S ++`
+	* `Down(S) / P(S)`
+		* Attempt to take the semaphore
+		* If the semaphore is 0, wait for it to be available
+		* Psuedocode: `while (!S) {block} S --;`
+
+#### Semaphores in C
+* `<sys/types.h>`, `<sys/ipc.h>`, `<sys/sem.h>`
+* `semget(key, amount, flags)`
+	* Create/Get access to a semaphore
+	* Different from `Up(S)` or `Down(S)`, as it does not modify the semaphore
+	* Returns a semaphore descriptor or -1 (errno)
+	* `key` - Unique semaphore identifier (use `ftok`)
+	* `amount` - Number of semaphores to create or get (semaphores are stored in sets of 1 or more)
+	* `flags` - Includes permissions for the semaphore, combined with bitwise or
+		* `IPC_CREAT` - Create the semaphore and set its value to 0
+		* `IPC_EXCL` Fail if the sempahore already exists and `IPC_CREAT` is on
+
+---
+
 ## 12/04/17: Memes
 
 DN: Why is the aim Memes?
 Memes are sort of like shared memory, just between people and not processes
 
-**Shared Memory Continued**
+#### Shared Memory Continued
 * `shmdt(pointer)`
 	* Detach a variable from a shared memory segment
 	* Returns 0 upon success and -1 upon failure
@@ -24,7 +64,7 @@ Memes are sort of like shared memory, just between people and not processes
 
 ## 12/01/17: Sharing is caring!
 
-**Shared Memory**
+#### Shared Memory
 * `<sys/shm.h>`, `<sys/ipc.h>`, `<sys/types.h>`
 * A segment of memory that can be accessed by multiple processes
 * Instead of the parent and child each storing a copy of a variable, they instead store pointers to the same thing
@@ -84,7 +124,7 @@ Memes are sort of like shared memory, just between people and not processes
 * | (pipe) redirects stdout from one command to stdin of the next
 	* `ls | wc` takes the output of ls and feeds it into wc
 
-**Redirection in C Programs**
+#### Redirection in C Programs
 * `dup(fd)` - `<unistd.h>`
 	* Duplicates an existing entry in the file table (opens it again)
 	* Returns a new file descriptor for the duplicate entry
@@ -117,7 +157,7 @@ Memes are sort of like shared memory, just between people and not processes
 
 ## 11/17/17: Ceci n'est pas une pipe
 
-**Pipe**
+#### Pipe
 * Conduit between 2 separate processes on the same computer
 * Consists of a read end and a write end, unidirectional
 * Acts like a file (opening, closing, added to the file table)
@@ -194,7 +234,7 @@ Memes are sort of like shared memory, just between people and not processes
 
 ## 11/13/17: What the fork?
 
-**Managing Sub-processes**
+#### Managing Sub-processes
 * `fork()` - `<unistd.h>`
 	* Creates a separate process based on the original one
 	* The new process is called a child, while the original one is called a parent
@@ -214,7 +254,7 @@ Memes are sort of like shared memory, just between people and not processes
 
 ## 11/09/17: Time to make an executive decision
 
-**The `exec` Family - `<unistd.h>`**
+#### The `exec` Family - `<unistd.h>`
 * C functions that run other programs from within
 * Replaces current process with the new program, so PID does not change
 * `execlp(<PROGRAM NAME>, <ARG1>, <ARG2>, ..., NULL)`
@@ -239,8 +279,7 @@ Memes are sort of like shared memory, just between people and not processes
 
 * `getpid()` and `sleep(<TIME>)` are pretty self-explanatory C commands
 
-**Signals**
-
+#### Signals
 * Limited way of sending information to a process
 * `kill`
 	* Command line utility to send a signal to a process
@@ -250,8 +289,7 @@ Memes are sort of like shared memory, just between people and not processes
 	* Sends SIGTERM or SIGNAL to all processes with the specified name
 * CTRL + C sends SIGINT and interrupts the process
 
-**Signal Handling in C**
-
+#### Signal Handling in C
 * `kill(<PID>, <SIGNAL>)` - `<signal.h>`
 	* Returns 0 on success or -1 (errno) on failure
 * sighandler
@@ -267,8 +305,7 @@ Memes are sort of like shared memory, just between people and not processes
 
 ## 11/06/17: Are your processes running? Then you should go out and catch them!
 
-**More Command Line Arguments**
-
+#### More Command Line Arguments
 * `fgets(<DESTINATION>, <BYTES>, <FILE POINTER>)` - `<stdio.h>`
 	* Reads in from a file stream and stores it in a string
 	* Reads at most \<BYTES> - 1 characters from the pointer (adds a null at the end), including newlines
@@ -279,19 +316,19 @@ Memes are sort of like shared memory, just between people and not processes
 * `sscanf(<SOURCE STRING>, <FORMAT STRING>, <VAR 1>, <VAR 2>, ...)` - `<stdio.h>`
 	* Scans a string and extracts values based on a format string
 
-**Processes**
-
+#### Processes
 * Every running program is a process
 * Programs can create subprocesses, but these are the same as regular processes
 * A processor can handle 1 process per cycle or per core
 * "Multitasking" only appears to happen due to the processor switching between all the active processes quickly
-* PID
-	* Unique identifiers for processes
-	* PID 1 is the init process, always running
-	* Each entry in the `/proc` directory is a current PID
-	* The `ps` command in Terminal lists what processes are currently running
-	* `ps -a` lists all processes across all accounts
-	* `ps -ax` lists processes not attached to Terminals
+
+#### PID
+* Unique identifiers for processes
+* PID 1 is the init process, always running
+* Each entry in the `/proc` directory is a current PID
+* The `ps` command in Terminal lists what processes are currently running
+* `ps -a` lists all processes across all accounts
+* `ps -ax` lists processes not attached to Terminals
 
 ---
 
@@ -306,8 +343,7 @@ _ _ _ _  _ _ _  _ _ _  _ _ _
      &0b 1 1 1  1 1 1  1 1 1
 ```
 
-**Command Line Arguments**
-
+#### Command Line Arguments
 * `int main(int argc, char *argv[])`
 	* `argc` - number of command line arguments
 	* `argv` - array of command line arguments
