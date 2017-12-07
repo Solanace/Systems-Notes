@@ -1,3 +1,38 @@
+## 12/07/17: What's a semaphore? - To control resources!
+
+* `semctl(descriptor, index, operation, data)`
+	* `data` is declared as such:
+	```C
+	union semun {
+		int val;               // used for SETVAL
+		struct semid_ds *buf;  // used for IPC_STAT and IPC_SET
+		unsigned short *array; // used for SETALL
+		struct seminfo *__buf;
+	};
+	```
+	* A `union` is a C structure designed to hold only one value at a time from a group of potential values
+		* Contrast to a `struct`, which can hold multiple values simultaneously
+* `semop(descriptor, operation, amount)`
+	* Perform an atomic semaphore operation
+	* You can Up/Down a semaphore by any integer value, not just 1
+	* `operation` - A pointer to a `struct sembuf`:
+	```C
+	struct sembuf {
+		short sem_op;
+		short sem_num;
+		short sem_flag;
+		other stuff
+	};
+	```
+	* `sem_num` - The index of the semaphore you want to work on
+	* `sem_op` - Negative for `Down(S)`, positive for `Up(S)`, 0 for blocking until the semaphore reaches 0
+	* `sem_flag`
+		* `SEM_UNDO` - Allows the OS to undo the given operation, useful for if the program doesn't release it
+		* `IPC_NOWAIT` - Instead of waiting for the semaphore to become available, return an error
+	* `amount` - The amount of semaphores you want to operate on in the semaphore set
+
+---
+
 ## 12/05/17: How do we flag down a resource?
 
 DN: How would you control access to a shared resource like a file, pipe, or shared memory, such that you could ensure no read/write conflicts occurred?
@@ -11,11 +46,11 @@ DN: How would you control access to a shared resource like a file, pipe, or shar
 * Semaphores are _atomic_, not split up into multiple processor instructions
 
 #### Semaphore Operations
-* Non-atomic
+* Non-atomic (can be interrupted)
 	* Create a semaphore
 	* Set an initial value
 	* Remove a semaphore
-* Atomic
+* Atomic (cannot be interrupted)
 	* `Up(S) / V(S)`
 		* Release the semaphore to signal you are done with its associated resource
 		* Pseudocode: `S ++`
@@ -196,16 +231,16 @@ Memes are sort of like shared memory, just between people and not processes
 
 ## 11/15/17: Playing Favorites
 
-	```C
-	int x = 302;
-	char *p = &x;
+```C
+int x = 302;
+char *p = &x;
 
-	Little-endian representation of x
-	| 46 |   1 |  0 |  0 | -> | 00101110 | 00000001 | ... |
+Little-endian representation of x
+| 46 |   1 |  0 |  0 | -> | 00101110 | 00000001 | ... |
 
-	Big-endian representation of x
-	|  0 |   0 |  1 | 46 | -> | ... | 00000001 | 00101110 |
-	```
+Big-endian representation of x
+|  0 |   0 |  1 | 46 | -> | ... | 00000001 | 00101110 |
+```
 * Depending on your operating system, the order of the bytes may be reversed
 * The _bits_ in each byte, however, are never reversed
 * The most significant (biggest) digit is stored first in big-endian, and vice versa for little-endian
