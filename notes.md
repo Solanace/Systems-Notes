@@ -1,3 +1,42 @@
+## 12/11/17: Creating a handshake agreement.
+
+#### DN
+Consider a program that uses pipes in order to communicate between 2 separate executable files.
+
+One is a "server" that is always running. The other is a "client".
+
+Design a process by which both files can connect to each other and verify that each can send and receieve data. Try to keep it as simple as possible.
+
+1. Client sends pre-arranged message, server checks message
+2. Server sends pre-arranged response, client checks response
+3. Client sends pre-arranged message to let the server know it received the response
+
+#### Handshakes
+* A procedure to ensure that a connection has been established between 2 programs
+* Both ends of the connection must verify that they can send and receive data to and from each other
+* 3-way handshake (see DN)
+* Pipes must be FIFOs because they are connecting two entirely different programs
+
+#### Basic server/client design pattern
+1. Setup
+	1. Server creates a well-known FIFO and waits for a connection.
+	2. Client creates a "private" FIFO.
+2. Handshake
+	1. Client connects to server and sends the private FIFO name. Client waits for a response.
+	2. Server receives client's message and removes the well-known pipe.
+	3. Server connects to client's FIFO, sending an initial acknowledgement message.
+	4. Client receives server's message and removes its private pipe.
+	5. Client sends response to server.
+3. Operation
+	1. Server and client send information back and forth.
+	2. ???
+	3. Profit!
+4. Reset
+	1. Client exits, server closes any connections to the client.
+	2. Server recreates the well-known pipe and wait for another client.
+
+---
+
 ## 12/07/17: What's a semaphore? - To control resources!
 
 * `semctl(descriptor, index, operation, data)`
@@ -35,7 +74,8 @@
 
 ## 12/05/17: How do we flag down a resource?
 
-DN: How would you control access to a shared resource like a file, pipe, or shared memory, such that you could ensure no read/write conflicts occurred?
+#### DN
+How would you control access to a shared resource like a file, pipe, or shared memory, such that you could ensure no read/write conflicts occurred?
 
 #### Semaphores
 * Created by Edsger Dijkstra
@@ -69,13 +109,15 @@ DN: How would you control access to a shared resource like a file, pipe, or shar
 	* `amount` - Number of semaphores to create or get (semaphores are stored in sets of 1 or more)
 	* `flags` - Includes permissions for the semaphore, combined with bitwise or
 		* `IPC_CREAT` - Create the semaphore and set its value to 0
-		* `IPC_EXCL` Fail if the sempahore already exists and `IPC_CREAT` is on
+		* `IPC_EXCL` - Fail if the sempahore already exists and `IPC_CREAT` is on
 
 ---
 
 ## 12/04/17: Memes
 
-DN: Why is the aim Memes?
+#### DN
+Why is the aim Memes?
+
 Memes are sort of like shared memory, just between people and not processes
 
 #### Shared Memory Continued
