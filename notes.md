@@ -194,11 +194,11 @@ Memes are sort of like shared memory, just between people and not processes
 * Changing the usual input/output behavior of a program
 * `ps > ps_file` creates a new file and puts the output of `ps` into that file, rather than the terminal
 * In general, `<COMMAND> > <FILE NAME>` redirects stdout to a file and overwrites its contents
-	* \>> also redirects stdout to a file, but appends it to the end
-* 2> redirects stderr to a file and overwrites it (2>> appends)
-* &> redirects stdout and stderr (&>> appends)
-* < redirects stdin from a file
-* | (pipe) redirects stdout from one command to stdin of the next
+	* `>>` also redirects stdout to a file, but appends it to the end
+* `2>` redirects stderr to a file and overwrites it (`2>>`  appends)
+* `&>` redirects stdout and stderr (`&>>` appends)
+* `<` redirects stdin from a file
+* `|` (pipe) redirects stdout from one command to stdin of the next
 	* `ls | wc` takes the output of ls and feeds it into wc
 
 #### Redirection in C Programs
