@@ -1,3 +1,33 @@
+## 12/18/17: Always tip your servers.
+
+#### Forking server/client design pattern
+* Server creates WKP (well-known pipe), client creates PP (private pipe)
+* When two processes read from the same pipe, a random one actually gets the data
+
+#### Basic server/client design pattern (now with forking!)
+2. Handshake
+	1. Client connects to server and sends the private FIFO name. Client waits for a response from the server.
+	2. Server receives client's message and forks off a subserver.
+	3. Subserver connects to client FIFO, sending an initial acknowledgement message.
+	4. Client receives subserver's message, removes its PP.
+3. Operation
+	1. Server removes WKP and closes any connections to client.
+	2. Server recreates WKP and waits for a new connection.
+	3. Subserver and client send information back and forth.
+```
+SS < - - - S - - - > SS
+|^       (WKP)       |^  
+||                   ||
+||                   ||
+v|                   v|
+C                     C
+```
+
+#### Downsides to this pattern
+* No communication between processes outside of clients and individual subservers
+
+---
+
 ## 12/11/17: Creating a handshake agreement.
 
 #### DN
