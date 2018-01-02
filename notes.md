@@ -1,3 +1,31 @@
+## 01/02/18: Socket to Me
+
+#### Socket
+* A connection between 2 programs over a _network_
+* A socket corresponds to an IP (internet protocol) Address/Port pair
+
+#### To use a socket
+1. Create the socket
+2. Bind it to an address and port
+3. Listen for/initiate a connection
+4. Send/receive data
+
+#### IP Address
+* _All_ devices connected to the Internet have an IP address
+* IP addresses come in two flavors: IPv4 and IPv6
+* Addresses are allocated in blocks to make routing easier
+* IPv4 uses 4 byte addresses of the form \[0-255].\[0-255].\[0-255].\[0-255]
+	* Each group is called an _octet_ (2^8)
+	* There are at most 2^32, or ~4.3 billion IPv$ addresses
+* IPv6 uses 16 byte addresses of the form \[0-ffff]:\[0-ffff]:\[0-ffff]:\[0-ffff]:\[0-ffff]:\[0-ffff]:\[0-ffff]:\[0-ffff]
+	* Each group is called a _hextet_
+	* Leading 0s are ignored and consecutive 0 hextets can be replaced with ::
+	* IPv4 addresses can be represented as 5 0-hextets, 1 ffff hextet, and the IPv4 address
+	* There are at most 2^128 IPv6 addresses
+	
+
+---
+
 ## 12/18/17: Always tip your servers.
 
 #### Forking server/client design pattern
