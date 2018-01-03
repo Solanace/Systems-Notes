@@ -1,10 +1,35 @@
+## 01/03/18: Socket to Me
+
+#### Network Port
+* Allows a single computer to run multiple services
+* A socket combines an IP address and port
+* Each computer has 2^16 (65,536) ports
+* Some ports are reserved for specific services:
+	* 80: http
+	* 22: ssh
+	* 443: ssl
+
+#### Network Connection Types
+* Stream Sockets
+	* Reliable 2-way commnication
+	* Must be connected on both ends-
+	* Data is received in the order it is sent (harder than it sounds)
+	* Most use the Transmisson Control Protacol (TCP)
+* Datagram Sockets
+	* "Connectionless" - an established connection is not required
+	* Data sent may be received out of order, if at all
+	* Significantly faster - ironically, streaming services use datagram sockets
+	* Uses the User Datagram Protocol
+
+---
+
 ## 01/02/18: Socket to Me
 
 #### Socket
 * A connection between 2 programs over a _network_
 * A socket corresponds to an IP (internet protocol) Address/Port pair
 
-#### To use a socket
+#### To Use a socket
 1. Create the socket
 2. Bind it to an address and port
 3. Listen for/initiate a connection
@@ -14,15 +39,19 @@
 * _All_ devices connected to the Internet have an IP address
 * IP addresses come in two flavors: IPv4 and IPv6
 * Addresses are allocated in blocks to make routing easier
-* IPv4 uses 4 byte addresses of the form \[0-255].\[0-255].\[0-255].\[0-255]
+* IPv4 uses 4 byte addresses of the following form:
+	* `[0-255].[0-255].[0-255].[0-255]`
 	* Each group is called an _octet_ (2^8)
 	* There are at most 2^32, or ~4.3 billion IPv$ addresses
-* IPv6 uses 16 byte addresses of the form \[0-ffff]:\[0-ffff]:\[0-ffff]:\[0-ffff]:\[0-ffff]:\[0-ffff]:\[0-ffff]:\[0-ffff]
-	* Each group is called a _hextet_
-	* Leading 0s are ignored and consecutive 0 hextets can be replaced with ::
+* IPv6 uses 16 byte addresses of the following form:
+	* `[0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]:[0-ffff]`
+	* Each group is called a _hextet_ (2^16)
+	* Leading 0s are ignored and any number of consecutive 0 hextets can be replaced with `::`
+		* `0000 : 0000 : 0000 : 0000 : 004f : 13c2 : 0009 : a2d2 -> :: 4f : 13c2 : 9 : a2d2`
+		* If there are multiple "strings" of consecutive 0 hextets, only one can undergo this replacement
 	* IPv4 addresses can be represented as 5 0-hextets, 1 ffff hextet, and the IPv4 address
+		* `149.89.150.100 -> :: ffff : 149.89.150.100`
 	* There are at most 2^128 IPv6 addresses
-	
 
 ---
 
