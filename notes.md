@@ -1,3 +1,76 @@
+## 01/05/18: Stop. Collaborate, and Listen
+
+#### To Use a Socket
+1. Create the socket
+2. Bind it to an address and port (server)
+3. Listen and accept (server) or connect (client)
+4. Send/receive data
+
+* `socket(domain, type, protocol)` - `<sys/socket.h>`
+	* Creates a socket
+	* Returns a socket descriptor (int a la file desciptor)
+	* `domain` - type of address, use either `AF_INET` or `AF_INET6`
+	* `type` - `SOCK_STREAM` or `SOCK_DGRAM`
+	* `protocol` - Combination of domain and type settings; if set to 0, the OS will set the correct protocol
+	* Example: `int sd = socket(AF_INET, SOCK_STREAM, 0);`
+* `struct addrinfo`
+	* Used in system library calls to represent network addresses
+	* Contains information like the IP address, port, and protocol
+	* Variables
+		* `ai_family`
+			* `AF_INET` - IPv4
+			* `AF_INET6` - IPv6
+			* `AF_UNSPEC` - IPv4 or IPv6
+		* `ai_socktype`
+			* `SOCK_STREAM`
+			* `SOCK_DGRAM`
+		* `ai_flags`
+			* `AI_PASSIVE` - Automatically set to any incoming IP address
+		* `ai_addr` - Pointer to a `struct sockaddr` containing the IP address
+		* `ai_addrlen` - Size of the address in bytes
+* `getaddrinfo(node, service, hints, results)` - `<sys/types.h>`, `<sys/socket.h>`, `<netdb.h>`
+	* Used to lookup information about a network address and gets one or more matching `struct addrinfo` entries
+	* `node` - String containing an IP address or hostname to lookup
+		* If NULL, uses the local machine's IP address
+	* `service` - String with a port number or service name (if the service is in `/etc/services`)
+	* `hints` - Pointer to a `struct addrinfo` used to provide settings for the lookup (type of address, etc.)
+	* `results` - Pointer to a `struct addrinfo` that will be a linked list containing entries for each matching address
+		* `getaddrinfo` will allocate memory for the linked list
+	* Example:
+	```C
+	struct addrinfo *hints, *results;
+	hints = (struct addrinfo *)calloc(1, sizeof(struct addrinfo)); // heap isn't necessary, but it must be 0-set
+	hints->ai_family = AF_INET;
+	hints->ai_socktype = SOCK_STREAM; // TCP socket
+	hints->ai_flags = AI_PASSIVE; // only needed on server
+	getaddrinfo(NULL, "80", hints, &results); // server sets node to NULL
+	// client: getaddrinfo("149.89.150.100", "9845", hints, &results);
+	// do stuff
+	free(hints);
+	freeaddrinfo(results);
+	```
+* `bind(socket_descriptor, address, address_length)` - `<sys/socket.h>`
+	* Binds the socket to an address and port (server only)
+	* Returns 0 upon success and -1 upon failure
+	* `socket_descriptor` - Return value of `socket`
+	* `address` - Pointer to a `struct sockaddr` representing the address
+	* `address_length` - Size of the address, in bytes
+	* `address` and `address_length` can be retrieved from `getaddrinfo`
+	* Example:
+	```C
+	// run the previous two examples
+	bind(sd, results->ai_addr, results->ai_addrlen);
+	```
+* `listen(socket_descriptor, backlog)` - `<sys/socket.h>`
+	* Sets a socket to passively wait for a connection (server only)
+	* Needed for stream sockets
+	* Doesn't block
+	* `socket_descriptor` - Return value of `socket`
+	* `backlog` - Number of connections that can be queued up
+		* Depending on protocol, this might not do much
+
+---
+
 ## 01/03/18: Socket to Me
 
 #### Network Port
@@ -12,14 +85,14 @@
 #### Network Connection Types
 * Stream Sockets
 	* Reliable 2-way commnication
-	* Must be connected on both ends-
+	* Must be connected on both ends
 	* Data is received in the order it is sent (harder than it sounds)
 	* Most use the Transmisson Control Protacol (TCP)
 * Datagram Sockets
-	* "Connectionless" - an established connection is not required
+	* Connectionless; an established connection is not required
 	* Data sent may be received out of order, if at all
-	* Significantly faster - ironically, streaming services use datagram sockets
-	* Uses the User Datagram Protocol
+	* Significantly faster; ironically, streaming services use datagram sockets
+	* Uses the User Datagram Protocol (UDP)
 
 ---
 
@@ -29,7 +102,7 @@
 * A connection between 2 programs over a _network_
 * A socket corresponds to an IP (internet protocol) Address/Port pair
 
-#### To Use a socket
+#### To Use a Socket
 1. Create the socket
 2. Bind it to an address and port
 3. Listen for/initiate a connection
