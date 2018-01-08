@@ -1,3 +1,49 @@
+## 01/08/18: Stop. Collaborate, and Listen
+
+* `accept(socket descriptor, address, address length)` - `<sys/socket.h>`
+	* Accept the next client in the queue of a soccket in the listen state
+	* Used for stream sockets
+	* Performs server side of the 3-way handshake
+	* Creates a new socket for communicating with the client without modifying the listening socket
+	* Returns a descriptor to the new socket
+	* Blocks until a connection is made
+	* `socket descriptor` - Descriptor for the listening socket
+	* `address` - Pointer to a `struct sockaddr_storage` that contains information about the new socket after `accept()`
+	* `adress length` - Pointer to a variable that will contain the size of the new sock
+	* Example:
+	```C
+	// create socket
+	int sd = socket(AF_INET, SOCK_STREAM, 0);
+	// use getaddrinfo and bind
+
+	listen(sd, 10);
+
+	int client_socket;
+	socklen_t sock_size;
+
+	struct sockaddr_storage client_address;
+	client_socket = accept(sd, (struct sockaddr *)&client_address, &sock_size);
+	```
+* `connect(socket descriptor, adddres, address length)` - `<sys/socket.h>`, `<sys/types.h>`
+	* Connect to a socket currently in the listening state
+	* Used for stream sockets
+	* Performs the client side of the 3-way handshake
+	* Binds the socket to an address and port
+	* Blocks until a connection is made or by failing
+	* `socket descriptor` - Descriptor for the socket
+	* `address` - Pointer to a `struct sock_addr` representing the address
+	* `adress length` - Size of the address in bytes
+	* Example:
+	```C
+	// create socket
+	int sd = socket(AF_INET, SOCK_STREAM, 0);
+	
+	struct addrinfo *hints, *results;
+	// use getaddrinfo()
+	
+	connect(sd, results->ai_addr, results->ai_addrlen);
+	```
+
 ## 01/05/18: Stop. Collaborate, and Listen
 
 #### To Use a Socket
