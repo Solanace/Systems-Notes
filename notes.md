@@ -9,7 +9,7 @@
 	* Blocks until a connection is made
 	* `socket descriptor` - Descriptor for the listening socket
 	* `address` - Pointer to a `struct sockaddr_storage` that contains information about the new socket after `accept()`
-	* `adress length` - Pointer to a variable that will contain the size of the new sock
+	* `address length` - Pointer to a variable that will contain the size of the new sock
 	* Example:
 	```C
 	// create socket
@@ -32,7 +32,7 @@
 	* Blocks until a connection is made or by failing
 	* `socket descriptor` - Descriptor for the socket
 	* `address` - Pointer to a `struct sock_addr` representing the address
-	* `adress length` - Size of the address in bytes
+	* `address length` - Size of the address in bytes
 	* Example:
 	```C
 	// create socket
