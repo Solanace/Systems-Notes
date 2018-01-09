@@ -29,7 +29,7 @@
 	* Used for stream sockets
 	* Performs the client side of the 3-way handshake
 	* Binds the socket to an address and port
-	* Blocks until a connection is made or by failing
+	* Blocks until a connection is made (or fails)
 	* `socket descriptor` - Descriptor for the socket
 	* `address` - Pointer to a `struct sock_addr` representing the address
 	* `address length` - Size of the address in bytes
@@ -43,6 +43,8 @@
 	
 	connect(sd, results->ai_addr, results->ai_addrlen);
 	```
+
+---
 
 ## 01/05/18: Stop. Collaborate, and Listen
 
