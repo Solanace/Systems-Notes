@@ -1,3 +1,33 @@
+## 01/11/18: Cisco in an Hour™ 2: Electric Boogaloo
+
+#### Link Layer
+* In order for data to be sent between computers:
+	* Each computer needs a unique address (MAC address)
+	* The data needs to be sent in a standardized format (frames)
+* MAC (Media Access Control) Address
+	* 6-byte hex address, e.g., `2a:00:1e:b9:70:f6`
+	* Only need to be unique on the same local network (not for internet)
+* Ethernet frames have the following format:
+	* prefix = 8 bytes (7 * 10101010 + 10101011)
+	* dest = 6 bytes (MAC address)
+	* source = 6 bytes (MAC address)
+	* type = 2 bytes
+	* data (MTU [Maximum Transmission Unit] of 1500 bytes)
+	* checksum = 4 bytes (ensures data integrity)
+
+#### Internet Layer
+* Transmission of data between two separate networks
+* Major features include addressing and routing
+* Routers are physical devices used to connect different local networks
+* Internet layer traffic ignores the specific of link layer traffic
+* Data sent over the internet layer are formatted into IP packets:
+	* type = 2 bytes (IPv4/IPv6, length of header)
+	* size = 2 bytes (total size of the packet)
+	* fragment info = 4 bytes (full payloads may be broken into fragments. Each fragment includes number of fragments and individual fragment number)
+	* ttl (time-to-live) = 1 byte (maximum number of hops)
+
+---
+
 ## 01/11/18: Cisco in an Hour™
 
 #### Layer Models of Networking
@@ -228,7 +258,7 @@ Due to the complexity of network communications, the topic is often conceptualiz
 	3. Subserver and client send information back and forth.
 ```
 SS < - - - S - - - > SS
-|^       (WKP)       |^  
+|^       (WKP)       |^
 ||                   ||
 ||                   ||
 v|                   v|
