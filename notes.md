@@ -1,4 +1,25 @@
-## 01/11/18: Cisco in an Hour™ 2: Electric Boogaloo
+## 01/16/18: Cisco in an Hour™ 3: In 3-D
+
+#### Internet Layer Continued
+* IPv4 packet format:
+	* header = 12 bytes
+	* source & destination = 4 bytes (IPv4 addresses)
+	* data (MTU is 65,535 bytes)
+* Routing
+	* Routers may break IPv4 packets into fragments
+	* When a router receives a packet, it has 2 options:
+		1. Send that packet to the attached local network
+		2. Forward that packet to a different router
+		* You can see this in action via the terminal command `traceroute <WEBSITE>`
+		* `route in` lists 
+* IPv6 differences:
+	* Address space - 2^32 vs. 2^128
+	* Packet format - In addition to address size change, IPv6 packet headers have less information (no checksum or fragment info)
+	* MTU - Up to 2^32 (called a jumbogram)
+
+---
+
+## 01/12/18: Cisco in an Hour™ 2: Electric Boogaloo
 
 #### Link Layer
 * In order for data to be sent between computers:
@@ -12,7 +33,7 @@
 	* dest = 6 bytes (MAC address)
 	* source = 6 bytes (MAC address)
 	* type = 2 bytes
-	* data (MTU [Maximum Transmission Unit] of 1500 bytes)
+	* data (MTU \[Maximum Transmission Unit] of 1500 bytes)
 	* checksum = 4 bytes (ensures data integrity)
 
 #### Internet Layer
@@ -20,11 +41,14 @@
 * Major features include addressing and routing
 * Routers are physical devices used to connect different local networks
 * Internet layer traffic ignores the specific of link layer traffic
-* Data sent over the internet layer are formatted into IP packets:
+* Data sent over the internet layer are formatted into IP packets
+* IPv4 packet header format:
 	* type = 2 bytes (IPv4/IPv6, length of header)
 	* size = 2 bytes (total size of the packet)
-	* fragment info = 4 bytes (full payloads may be broken into fragments. Each fragment includes number of fragments and individual fragment number)
-	* ttl (time-to-live) = 1 byte (maximum number of hops)
+	* fragment info = 4 bytes (Full payloads may be broken into fragments. Each fragment includes the number of fragments and its individual fragment number)
+	* ttl (time-to-live) = 1 byte (maximum number of hops a packet can make before reaching its destination)
+	* protocol = 1 byte (TCP/UDP)
+	* header checksum = 2 bytes (only a checksum of the header)
 
 ---
 
