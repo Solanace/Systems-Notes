@@ -1,3 +1,26 @@
+## 01/17/18: Cisco in an Hour™ IV: A New Hope
+
+#### Transport Layer
+* Computer to computer connection over a network
+* Unconcerned with the individual hops of layer 3 traffic
+* Network ports are used at the transport layer
+* TCP and UDP are transport layer protocols
+
+#### Application Layer
+* Everything else (program(s) and code)
+
+#### Data Encapsulation
+* As data crosses from an upper layer to a lower one, layer-specific metadata is added to help aid transmission
+* Application -> Transport
+	* TCP/UDP headers are added, including network port information
+* Transport -> Network
+	* Data (including transport headers) is packaged into IP packets
+* Network -> Link
+	* Packets (including IP and transport headers) are packaged into Ethernet frames
+* When data crosses back up a layer, the packaging for the lower layer is removed (data decapsulation)
+
+---
+
 ## 01/16/18: Cisco in an Hour™ 3: In 3-D
 
 #### Internet Layer Continued
@@ -16,12 +39,14 @@
 	* Address space - 2^32 vs. 2^128
 	* Packet format - In addition to address size change, IPv6 packet headers have less information (no checksum or fragment info)
 	* MTU - Up to 2^32 (called a jumbogram)
+	* More work on link layer devices
+	* No checksum in the header
 
 ---
 
 ## 01/12/18: Cisco in an Hour™ 2: Electric Boogaloo
 
-#### Link Layer
+#### Link Layer Continued
 * In order for data to be sent between computers:
 	* Each computer needs a unique address (MAC address)
 	* The data needs to be sent in a standardized format (frames)
@@ -33,7 +58,7 @@
 	* dest = 6 bytes (MAC address)
 	* source = 6 bytes (MAC address)
 	* type = 2 bytes
-	* data (MTU \[Maximum Transmission Unit] of 1500 bytes)
+	* data (MTU (Maximum Transmission Unit) of 1500 bytes)
 	* checksum = 4 bytes (ensures data integrity)
 
 #### Internet Layer
@@ -62,11 +87,12 @@ Due to the complexity of network communications, the topic is often conceptualiz
 	2. Transport
 	3. Internet
 	4. Link
-* Link Layer
-	* Point-to-point transmission between devices on the same (local) network
-	* Combines physically connecting computers with basic addressing and transmission protocols
-	* Physical connection
-		* How to transmit bits between two computers
+
+#### Link Layer
+* Point-to-point transmission between devices on the same (local) network
+* Combines physically connecting computers with basic addressing and transmission protocols
+* Physical connection
+	* How to transmit bits between two computers
 
 #### Brief History of Physical Connections
 * Thicknet
